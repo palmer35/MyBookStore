@@ -3,7 +3,6 @@ namespace BookStore.Models
 {
     public class Book
     {
-        [Key]
         public int IdBook { get; set; } //id - книги
         public string TitleBook { get; set; } //название книги
         public string Author { get; set; } //Автор книги

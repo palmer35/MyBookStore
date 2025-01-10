@@ -47,10 +47,15 @@ public class BookFinder
     /// <returns></returns>
     public async Task<List<Book>> SearchByAuthorAsync(string author)
     {
+        if (string.IsNullOrWhiteSpace(author))
+        {
+            return new List<Book>(); 
+        }
         return await context.Books
-            .Where(b => b.Author.Contains(author, StringComparison.OrdinalIgnoreCase))
+            .Where(b => b.Author.ToLower().Contains(author.ToLower()))
             .ToListAsync();
     }
+
 
     /// <summary>
     /// Метод поиска книг по жанру
@@ -59,8 +64,13 @@ public class BookFinder
     /// <returns></returns>
     public async Task<List<Book>> SearchByGenreAsync(string genre)
     {
+        if (string.IsNullOrWhiteSpace(genre))
+        {
+            return new List<Book>(); 
+        }
+
         return await context.Books
-            .Where(b => b.GenreBook.Contains(genre, StringComparison.OrdinalIgnoreCase))
+            .Where(b => b.GenreBook.ToLower().Contains(genre.ToLower()))
             .ToListAsync();
     }
 

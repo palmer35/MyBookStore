@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using BookStore.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +24,6 @@ var app = builder.Build();
 // Настройка middleware
 if (app.Environment.IsDevelopment())
 {
-    // Включаем Swagger только в режиме разработки
     app.UseSwagger();
     app.UseSwaggerUI();
 }
