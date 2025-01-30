@@ -3,6 +3,14 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt")
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 // Добавляем необходимые сервисы
 // 1. Подключение к базе данных
 builder.Services.AddDbContext<BookStoreContext>(options =>
@@ -10,7 +18,7 @@ builder.Services.AddDbContext<BookStoreContext>(options =>
 
 // 2. Добавляем ваши сервисы BookFinder и BookStoreManager
 builder.Services.AddScoped<BookFinder>();
-builder.Services.AddScoped<BookStoreManager>();
+builder.Services.AddScoped<UserFinder>();
 
 // 3. Добавляем контроллеры и поддержку API
 builder.Services.AddControllers();
@@ -34,5 +42,16 @@ app.UseAuthorization();
 
 app.MapControllers(); // Сопоставляем запросы с контроллерами
 
-// Запуск приложения
-app.Run();
+try
+{
+    Log.Information("Запуск приложения...");
+    app.Run();
+}
+catch(Exception ex)
+{
+    Log.Fatal(ex, "Приложение завершилось с ошибкой.");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

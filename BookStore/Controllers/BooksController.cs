@@ -20,7 +20,7 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> AddBook([FromBody] Book book)
     {
-        if (book == null)
+        if (book == null)   
         {
             return BadRequest(new { Message = "Некорректные данные книги." });
         }
@@ -81,10 +81,12 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<Book>> GetBookById(int id)
     {
         var book = await bookFinder.SearchByIdAsync(id);
+
         if (book == null)
         {
             return NotFound(new { Message = "Книга не найдена." });
         }
-        return Ok(book);
+
+        return Ok(book); 
     }
 }
