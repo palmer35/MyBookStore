@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-namespace BookStore.Models
+﻿namespace Shop.Domain.Models
 {
     public class User
     {
@@ -20,13 +19,7 @@ namespace BookStore.Models
             Wallet = wallet;
         }
 
-        public void PrintUser()
-        {
-            Console.WriteLine("Информвция о покупателе: ");
-            Console.WriteLine($"ID: {Id}, Имя : {Name}, Почта: {Email}, Телефон: {PhoneNumber}, Общая сумма: {Wallet}");
-        }
-
-        public bool DeductBalance(decimal amount)
+        public bool WithdrawFunds(decimal amount)
         {
             if (Wallet >= amount)
             {

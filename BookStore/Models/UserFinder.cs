@@ -107,7 +107,7 @@ public class UserFinder
         }
 
         // Списание средств
-        user.DeductBalance(book.Price);
+        user.WithdrawFunds(book.Price);
 
         // Обновление данных в базе
         context.Users.Update(user);

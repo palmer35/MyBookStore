@@ -1,57 +1,34 @@
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log.txt")
-    .CreateLogger();
-
-builder.Host.UseSerilog();
-
-// Добавляем необходимые сервисы
-// 1. Подключение к базе данных
-builder.Services.AddDbContext<BookStoreContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// 2. Добавляем ваши сервисы BookFinder и BookStoreManager
-builder.Services.AddScoped<BookFinder>();
-builder.Services.AddScoped<UserFinder>();
-
-// 3. Добавляем контроллеры и поддержку API
-builder.Services.AddControllers();
-
-// 4. Добавляем Swagger (документация для API)
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Настройка middleware
-if (app.Environment.IsDevelopment())
+internal class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-// Включаем маршрутизацию и подключение контроллеров
-app.UseRouting();
-app.UseAuthorization();
+        // Конфигурация логирования
+        LoggingConfiguration.ConfigureLogging(builder.Host);
 
-app.MapControllers(); // Сопоставляем запросы с контроллерами
+        // Конфигурация сервисов
+        ServiceConfiguration.ConfigureServices(builder.Services, builder.Configuration);
 
-try
-{
-    Log.Information("Запуск приложения...");
-    app.Run();
-}
-catch(Exception ex)
-{
-    Log.Fatal(ex, "Приложение завершилось с ошибкой.");
-}
-finally
-{
-    Log.CloseAndFlush();
+        var app = builder.Build();
+
+        // Конфигурация middleware
+        MiddlewareConfiguration.ConfigureMiddleware(app);
+
+        try
+        {
+            Log.Information("Запуск приложения...");
+            app.Run();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Приложение завершилось с ошибкой.");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
 }
