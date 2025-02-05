@@ -8,8 +8,8 @@ public static class ServiceConfiguration
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         // Добавление сервисов
-        services.AddScoped<BookFinder>();
-        services.AddScoped<UserFinder>();
+        services.AddScoped<BookService>();
+        services.AddScoped<UsersService>();
 
         // Добавление контроллеров и поддержку API
         services.AddControllers();

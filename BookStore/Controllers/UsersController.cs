@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BookStore.Models;
+using Shop.Domain.Models;
 
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private UserFinder userFinder;
+    private UsersService userFinder;
     private BookStoreContext context;
 
-    public UsersController(UserFinder userFinder, BookStoreContext context)
+    public UsersController(UsersService userFinder, BookStoreContext context)
     {
         this.userFinder = userFinder;
         this.context = context;
@@ -17,8 +17,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Добавление пользователя
     /// </summary>
-    /// <param name="user"></param>
-    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult> AddUser([FromBody] User user)
     {
@@ -31,7 +29,9 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
     }
 
+    /// <summary>
     /// Получение пользователя по ID
+    /// </summary>
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUserById(int id)
     {
@@ -48,8 +48,6 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Удаление пользователя по ID
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
     [HttpDelete("{id}")]
     public async Task<ActionResult<User>> DeleteUser(int id)
     {
@@ -65,7 +63,9 @@ public class UsersController : ControllerBase
         return Ok(new { Message = $"Пользователь '{user.Name}' с ID '{user.Id}' успешно удален." });
     }
 
+    /// <summary>
     /// Покупка книги
+    /// </summary>
     [HttpPost("{userId}/purchase/{bookId}")]
     public async Task<ActionResult> PurchaseBook(int userId, int bookId)
     {

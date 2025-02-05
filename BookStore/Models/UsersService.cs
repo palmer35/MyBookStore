@@ -1,17 +1,15 @@
-﻿using BookStore.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Shop.Domain.Models;
 
-public class UserFinder
+public class UsersService
 {
     private readonly BookStoreContext context;
-    private readonly ILogger<UserFinder> logger;
+    private readonly ILogger<UsersService> logger;
 
     /// <summary>
     /// Подключаем базу данных через зависимость (Dependency Injection)
     /// </summary>
     /// <param name="context"></param>
-    public UserFinder(BookStoreContext context, ILogger<UserFinder> logger)
+    public UsersService(BookStoreContext context, ILogger<UsersService> logger)
     {
         this.context = context;
         this.logger = logger;
