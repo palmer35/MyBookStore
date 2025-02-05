@@ -1,13 +1,13 @@
-﻿using BookStore.Models;
+﻿using Shop.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private readonly BookFinder bookFinder;
+    private readonly BookService bookFinder;
 
-    public BooksController(BookFinder bookFinder)
+    public BooksController(BookService bookFinder)
     {
         this.bookFinder = bookFinder;
     }
@@ -15,12 +15,10 @@ public class BooksController : ControllerBase
     /// <summary>
     /// Добавление книги
     /// </summary>
-    /// <param name="book"></param>
-    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult> AddBook([FromBody] Book book)
     {
-        if (book == null)
+        if (book == null)   
         {
             return BadRequest(new { Message = "Некорректные данные книги." });
         }
@@ -32,7 +30,6 @@ public class BooksController : ControllerBase
     /// <summary>
     /// Получение всех книг
     /// </summary>
-    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Book>>> GetAllBooks()
     {
@@ -41,10 +38,24 @@ public class BooksController : ControllerBase
     }
 
     /// <summary>
+    /// Получение книги по ID
+    /// </summary>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Book>> GetBookById(int id)
+    {
+        var book = await bookFinder.SearchByIdAsync(id);
+
+        if (book == null)
+        {
+            return NotFound(new { Message = "Книга не найдена." });
+        }
+
+        return Ok(book);
+    }
+
+    /// <summary>
     /// Поиск книг по автору
     /// </summary>
-    /// <param name="author"></param>
-    /// <returns></returns>
     [HttpGet("search/author")]
     public async Task<ActionResult<IEnumerable<Book>>> SearchByAuthor([FromQuery] string author)
     {
@@ -59,8 +70,6 @@ public class BooksController : ControllerBase
     /// <summary>
     /// Поиск книг по жанру
     /// </summary>
-    /// <param name="genre"></param>
-    /// <returns></returns>
     [HttpGet("search/genre")]
     public async Task<ActionResult<IEnumerable<Book>>> SearchByGenre([FromQuery] string genre)
     {
@@ -70,21 +79,5 @@ public class BooksController : ControllerBase
             return NotFound(new { Message = "Книги по данному жанру не найдены." });
         }
         return Ok(books);
-    }
-
-    /// <summary>
-    /// Получение книги по ID
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Book>> GetBookById(int id)
-    {
-        var book = await bookFinder.SearchByIdAsync(id);
-        if (book == null)
-        {
-            return NotFound(new { Message = "Книга не найдена." });
-        }
-        return Ok(book);
     }
 }
